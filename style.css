@@ -631,6 +631,7 @@ body {
   cursor: pointer;
   border-radius: 6px;
   padding: 0 1px;
+  text-indent: 0; /* 防御：text-indent 会继承，inline-block 的字 span 会把父级段首缩进算进自己宽度，导致字距异常 */
   transition: background .15s, transform .15s, color .15s;
   position: relative;
 }
