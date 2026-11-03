@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>字里行间 · 错别字大侦探</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ========== 侧边选关抽屉 ========== -->
+  <div id="sidebar-mask" class="sidebar-mask"></div>
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-head">
+      <span>📚 章节选关</span>
+      <button id="btn-close-sidebar" class="btn btn-ghost btn-icon">✕</button>
+    </div>
+    <div id="sidebar-body" class="sidebar-body"></div>
+    <div class="sidebar-foot">
+      <span id="sidebar-progress" class="sidebar-progress"></span>
+      <button id="btn-clear-progress" class="btn btn-ghost btn-icon" title="清除全部通关标记">🗑 清除进度</button>
+    </div>
+  </aside>
+
+  <!-- ========== 开始界面 ========== -->
+  <section id="screen-start" class="screen active">
+    <div class="start-card">
+      <div class="logo">🔍</div>
+      <h1>错别字大侦探</h1>
+      <p class="subtitle">字里行间的较量 · 在对话、作文、通知、日记、书信中揪出隐藏的错别字</p>
+
+      <div class="rules">
+        <div class="rule-item"><span class="rule-icon">👆</span><span>阅读<b>对话、小作文、通知、日记、书信</b>，点击你认为是错别字的汉字</span></div>
+        <div class="rule-item"><span class="rule-icon">✅</span><span>点对：<b class="c-green">+100 分</b>，连击 3 次以上每个 +50%</span></div>
+        <div class="rule-item"><span class="rule-icon">❌</span><span>点错：<b class="c-red">-30 分</b>，并中断连击</span></div>
+        <div class="rule-item"><span class="rule-icon">⏱️</span><span>每关限时，时间耗尽进入下一关（未找到的算错题）</span></div>
+        <div class="rule-item"><span class="rule-icon">💡</span><span>每关 3 次提示机会，困难时别硬撑</span></div>
+      </div>
+
+      <button id="btn-start" class="btn btn-primary btn-big">开始游戏</button>
+      <button id="btn-select-level" class="btn btn-ghost btn-select">📚 自由选关</button>
+      <button id="btn-review-entry" class="btn btn-ghost hidden">📖 查看上次错题回顾</button>
+    </div>
+  </section>
+
+  <!-- ========== 游戏界面 ========== -->
+  <section id="screen-game" class="screen">
+    <!-- 顶部状态栏 -->
+    <header class="hud">
+      <button id="btn-menu" class="btn btn-ghost hud-menu" title="章节选关">☰</button>
+      <div class="hud-item"><span class="hud-label">关卡</span><span id="hud-level">1-1 / 8</span></div>
+      <div class="hud-item"><span class="hud-label">得分</span><span id="hud-score" class="c-gold">0</span></div>
+      <div class="hud-item"><span class="hud-label">连击</span><span id="hud-combo" class="c-orange">×0</span></div>
+      <div class="hud-item"><span class="hud-label">剩余</span><span id="hud-found">0 / 3</span></div>
+    </header>
+
+    <!-- 计时条 -->
+    <div class="timer-wrap">
+      <div id="timer-bar" class="timer-bar"></div>
+      <span id="timer-text" class="timer-text">60s</span>
+    </div>
+
+    <!-- 对话区域 -->
+    <main id="dialogue-area" class="dialogue-area"></main>
+
+    <!-- 底部操作栏 -->
+    <footer class="action-bar">
+      <button id="btn-hint" class="btn btn-hint">💡 提示 <span id="hint-count">3</span></button>
+      <div id="feedback-tip" class="feedback-tip"></div>
+      <button id="btn-sound" class="btn btn-ghost btn-sound" title="音效开关">🔊</button>
+      <button id="btn-skip" class="btn btn-ghost">跳过本关 ⏭</button>
+    </footer>
+
+    <!-- 连击浮层 -->
+    <div id="combo-pop" class="combo-pop hidden"></div>
+  </section>
+
+  <!-- ========== 章节开幕 ========== -->
+  <section id="screen-chapter" class="screen">
+    <div class="chapter-card">
+      <div id="chapter-emoji" class="chapter-emoji">🌱</div>
+      <div id="chapter-kicker" class="chapter-kicker">CHAPTER 1</div>
+      <h2 id="chapter-title">第一章 · 同音字的陷阱</h2>
+      <p id="chapter-desc" class="chapter-desc"></p>
+      <div id="chapter-meta" class="chapter-meta"></div>
+      <button id="btn-chapter-start" class="btn btn-primary btn-big">开始本章 ▶</button>
+    </div>
+  </section>
+
+  <!-- ========== 过关过渡 ========== -->
+  <section id="screen-levelclear" class="screen">
+    <div class="clear-card">
+      <div id="clear-emoji" class="clear-emoji">🎉</div>
+      <h2 id="clear-title">第 1 关通过！</h2>
+      <div id="clear-stats" class="clear-stats"></div>
+      <button id="btn-next-level" class="btn btn-primary btn-big">进入下一关 ▶</button>
+    </div>
+  </section>
+
+  <!-- ========== 章节结算 ========== -->
+  <section id="screen-chapter-result" class="screen">
+    <div class="clear-card chapter-result-card">
+      <div id="chapter-result-emoji" class="clear-emoji">🏅</div>
+      <div id="chapter-result-kicker" class="chapter-result-kicker">CHAPTER 1 CLEARED</div>
+      <h2 id="chapter-result-title">第一章 · 完成！</h2>
+      <div class="chapter-result-grid">
+        <div class="chapter-result-item"><span class="chapter-result-num" id="cr-rate">0%</span><span class="chapter-result-label">本章找对率</span></div>
+        <div class="chapter-result-item"><span class="chapter-result-num c-gold" id="cr-score">0</span><span class="chapter-result-label">本章得分</span></div>
+        <div class="chapter-result-item"><span class="chapter-result-num" id="cr-time">0 秒</span><span class="chapter-result-label">本章用时</span></div>
+        <div class="chapter-result-item"><span class="chapter-result-num c-orange" id="cr-combo">×0</span><span class="chapter-result-label">本章最大连击</span></div>
+        <div class="chapter-result-item wide"><span class="chapter-result-num" id="cr-wrong">0</span><span class="chapter-result-label">本章错题数</span></div>
+      </div>
+      <div id="chapter-result-note" class="chapter-result-note"></div>
+      <div class="chapter-result-btns">
+        <button id="btn-chapter-review" class="btn btn-ghost">📖 查看本章错题（<span id="cr-wrong-count">0</span>）</button>
+        <button id="btn-next-chapter" class="btn btn-primary btn-big">进入下一章 ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 结算界面 ========== -->
+  <section id="screen-result" class="screen">
+    <div class="result-card">
+      <div id="result-rank" class="result-rank">S</div>
+      <h2 id="result-title">火眼金睛</h2>
+      <div class="result-grid">
+        <div class="result-item"><span class="result-num" id="r-score">0</span><span class="result-label">总得分</span></div>
+        <div class="result-item"><span class="result-num" id="r-accuracy">0%</span><span class="result-label">点击准确率</span></div>
+        <div class="result-item"><span class="result-num" id="r-combo">0</span><span class="result-label">最大连击</span></div>
+        <div class="result-item"><span class="result-num" id="r-found">0/0</span><span class="result-label">找出错别字</span></div>
+      </div>
+      <div class="result-btns">
+        <button id="btn-review" class="btn btn-primary">📖 错题回顾（<span id="r-wrong-count">0</span>）</button>
+        <button id="btn-restart" class="btn btn-ghost">🔄 再来一局</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 错题回顾 ========== -->
+  <section id="screen-review" class="screen">
+    <div class="review-card">
+      <h2 id="review-title">📖 错题回顾</h2>
+      <p class="review-sub" id="review-sub">温故知新，下次别再被它们骗到啦</p>
+      <div id="review-list" class="review-list"></div>
+      <button id="btn-back-result" class="btn btn-primary btn-big">返回</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- 题库：每个章节一个文件，新增章节在此处加一行即可 -->
+<script src="js/questions/ch01-tongyinzi.js"></script>
+<script src="js/questions/ch02-xingjinzi.js"></script>
+<script src="js/questions/ch03-huoyanjing.js"></script>
+<script src="js/questions/ch04-zhongji.js"></script>
+<script src="js/questions/ch05-zuowen.js"></script>
+<!-- 题库加载器（必须放在所有章节文件之后） -->
+<script src="js/questions.js"></script>
+<script src="js/sound.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

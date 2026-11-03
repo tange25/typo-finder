@@ -1,0 +1,8 @@
+# 内部工作目录
+.workbuddy/
+
+# 系统/编辑器
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
